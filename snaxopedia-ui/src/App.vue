@@ -1,46 +1,18 @@
 <template>
-  <div v-for="bug in bugs" :key="bug.name">
-    <p>{{ bug.name }}</p>
-    <p>{{ bug.bug }}</p>
-    <p>{{ bug.snack }}</p>
-    <img
-      :src="`http://localhost:8000/locations/${bug.location}.webp`"
-      class="logo"
-      :alt="bug.location"
-    />
-    <img
-      :src="`http://localhost:8000/bugs/${bug.name}.png`"
-      class="logo"
-      :alt="bug.name"
-    />
-    <a href="https://vitejs.dev" target="_blank"> </a>
-  </div>
+  <LeftPage />
+  <RightPage />
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
+import { useStore } from "./stores/store";
 
-const bugs = ref([]);
-onMounted(() => {
-  fetch("http://localhost:8000/snaxopedia")
-    .then((response) => response.json())
-    .then((response) => {
-      bugs.value = response;
-    })
-    .catch((err) => console.log(err));
-});
+import LeftPage from "./components/LeftPage.vue";
+import RightPage from "./components/RightPage.vue";
+
+const store = useStore();
+const { loadSnaxopedia } = store;
+onMounted(() => loadSnaxopedia());
 </script>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<style scoped></style>
