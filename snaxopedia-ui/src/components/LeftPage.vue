@@ -99,6 +99,10 @@ const bugImageURL = (bugName: string) =>
   list-style: none;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+
+  margin: 0;
+  padding: 0;
 }
 
 .group-bugs .bug {

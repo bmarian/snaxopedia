@@ -5,18 +5,18 @@ export type MainState = {
 };
 
 export const useStore = defineStore("main", {
-  state: () => ({
-    snaxopedia: [],
-  } as MainState),
+  state: () => ({ snaxopedia: [] } as MainState),
   getters: {
     getLocations(state): string[] {
       const listOfLocations = state.snaxopedia.map((bug) => bug.location);
-      return [...new Set(listOfLocations)];
+      return [...new Set(listOfLocations.sort((a, b) => a.localeCompare(b)))];
     },
     getBugsGroupedByLocation(state) {
       const locations: string[] = this.getLocations;
       return locations.reduce((acc: {}[], location: string) => {
-        const bugsForLocation = state.snaxopedia.filter((bug) => bug.location === location);
+        const bugsForLocation = state.snaxopedia
+          .filter((bug) => bug.location === location)
+          .sort((a, b) => a.name.localeCompare(b.name));
         return [...acc, { location, bugs: bugsForLocation }];
       }, [])
     },
