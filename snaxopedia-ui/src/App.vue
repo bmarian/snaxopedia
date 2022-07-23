@@ -3,15 +3,17 @@
     <p>{{ bug.name }}</p>
     <p>{{ bug.bug }}</p>
     <p>{{ bug.snack }}</p>
-    <p>{{ bug.location }}</p>
     <img
-        :src="`http://localhost:8000/bugs/${bug.name}.png`"
-        class="logo"
-        :alt="bug.name"
+      :src="`http://localhost:8000/locations/${bug.location}.webp`"
+      class="logo"
+      :alt="bug.location"
     />
-    <a href="https://vitejs.dev" target="_blank">
-
-    </a>
+    <img
+      :src="`http://localhost:8000/bugs/${bug.name}.png`"
+      class="logo"
+      :alt="bug.name"
+    />
+    <a href="https://vitejs.dev" target="_blank"> </a>
   </div>
 </template>
 
