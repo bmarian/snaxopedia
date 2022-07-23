@@ -2,7 +2,13 @@
   --background-color: #D5CBCD;
   --accent-blue: #31B4C3;
 
-  --font: 'Mochiy Pop One', sans-serif
+  --font: 'Fredoka One', cursive;
+  --font-color: white;
+  --location-font-color: #258896;
+  --text-shadow: black;
+  --text-underline: #8FB0BD;
+
+  --no-photo-bug: #BCB0AC;
 }
 
 body {
