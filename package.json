@@ -1,0 +1,10 @@
+{
+  "name": "Snaxopedia",
+  "version": "1.0.0",
+  "description": "A wikipedia for the game bugsnax",
+  "scripts": {
+    "dev::ui": "cd .\\snaxopedia-ui\\ && pnpm run dev",
+    "dev::api": "cd .\\snaxopedia-api\\ && denon run --allow-read --allow-net index.ts"
+  },
+  "license": "MIT"
+}
