@@ -1,20 +1,33 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
+  <div v-for="bug in bugs" :key="bug.name">
+    <p>{{ bug.name }}</p>
+    <p>{{ bug.bug }}</p>
+    <p>{{ bug.snack }}</p>
+    <p>{{ bug.location }}</p>
+    <img
+        :src="`http://localhost:8000/bugs/${bug.name}.png`"
+        class="logo"
+        :alt="bug.name"
+    />
     <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
+
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+
+const bugs = ref([]);
+onMounted(() => {
+  fetch("http://localhost:8000/snaxopedia")
+    .then((response) => response.json())
+    .then((response) => {
+      bugs.value = response;
+    })
+    .catch((err) => console.log(err));
+});
+</script>
 
 <style scoped>
 .logo {
