@@ -1,10 +1,12 @@
-export type Bug = { 
-  name: string, 
-  location: string, 
-  bug: string, 
-  snack: string, 
+export type Bug = {
+  name: string,
+  location: string,
+  bug: string,
+  snack: string,
   image: string,
-  calories: number,
+  calories?: number,
+  strategy?: string,
+  attributes?: string[],
   isSelected?: boolean,
   hasBeenSeen?: boolean,
   hasBeenPhotographed?: boolean,

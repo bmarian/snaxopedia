@@ -21,11 +21,18 @@
         <span class="bug-image-bottom-left-triangle">◣</span>
         <span class="bug-image-bottom-right-triangle">◢</span>
       </div>
+      <div v-if="selectedBug.strategy" class="bug-strategy">
+        <p class="title">STRATEGY</p>
+        <p class="strategy">
+          {{ selectedBug.strategy }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useStore } from "../stores/store";
 import { Bug } from "../types";
@@ -37,6 +44,54 @@ const locationURL = (locationName: string) =>
   `http://localhost:8000/locations/${locationName}.webp`;
 const bugImageURL = (bugName: string) =>
   `http://localhost:8000/bugs/${bugName}.png`;
+
+const cleanupFormatting = (formattedString: string): string => {};
+
+const parsePageContent = (page: string) => {
+  const sections: string[] = page.split(/^==(.*)==$/m);
+  const strategySectionIndex = sections.findIndex((section) =>
+    section.toLowerCase().includes("strategy")
+  );
+  const strategySection = cleanupFormatting(sections[strategySectionIndex + 1]);
+
+  console.log(strategySection, page);
+  debugger;
+};
+
+watch(selectedBug, async (newValue) => {
+  if (!newValue?.name) return;
+
+  const hasAllAttributes = [
+    newValue.strategy,
+    newValue.attributes,
+    newValue.calories,
+  ].reduce((acc, attribute) => acc && typeof attribute !== "undefined", true);
+  if (hasAllAttributes) return;
+
+  const bugsnaxWikiAuthPage =
+    "https://bugsnax.fandom.com/api.php?action=centralauthtoken&origin=*";
+  const bugsnaxWikiPage = `https://bugsnax.fandom.com/api.php?action=query&titles=${newValue.name}&gaplimit=5&prop=revisions&rvprop=content&format=json&origin=*`;
+
+  try {
+    await fetch(bugsnaxWikiAuthPage, { mode: "cors" });
+    const response = await fetch(bugsnaxWikiPage, { mode: "cors" });
+    const responseJSON = await response.json();
+
+    const revisions = Object.values(
+      // @ts-ignore
+      Object.values(responseJSON?.query?.pages)?.[0]?.revisions
+    );
+    if (!revisions) return;
+
+    // @ts-ignore
+    const pageContent = revisions[revisions.length - 1]?.["*"];
+    if (!pageContent) return;
+
+    parsePageContent(pageContent);
+  } catch (err) {
+    console.log(err);
+  }
+});
 </script>
 
 <style scoped>
@@ -55,7 +110,8 @@ const bugImageURL = (bugName: string) =>
 .bug-info {
   height: calc(100% - 1.5rem);
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   display: flex;
   flex-direction: column;
@@ -67,13 +123,14 @@ const bugImageURL = (bugName: string) =>
   color: var(--font-color);
   background-color: var(--accent-blue);
 
-  font-size: 2.5rem;
+  margin: 1rem;
+  font-size: 4rem;
   padding: 0.2rem 1rem;
   border-radius: 1rem;
 }
 .bug-info .bug-image-container {
   width: 90%;
-  height: 20rem;
+  max-height: 30%;
   position: relative;
 
   display: flex;
@@ -131,6 +188,7 @@ const bugImageURL = (bugName: string) =>
 .bug-info .bug-image-container .calories-container .calories-number {
   font-size: 1.5rem;
   background-color: var(--fancy-off-white);
+  color: var(--calories-number-color);
   padding: 0.5rem 3.3rem;
   border-radius: 0.2rem;
   margin-top: -0.9rem;
@@ -141,5 +199,31 @@ const bugImageURL = (bugName: string) =>
   max-width: 100%;
   max-height: 100%;
   aspect-ratio: 1;
+}
+
+.bug-info .bug-strategy {
+  width: 90%;
+  position: relative;
+  margin-top: 1.5rem;
+}
+
+.bug-info .bug-strategy .title {
+  font-size: 2.5rem;
+  position: absolute;
+  top: -3rem;
+  left: 1rem;
+
+  color: var(--accent-blue);
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--font-color);
+}
+
+.bug-info .bug-strategy .strategy {
+  padding: 1rem 1rem;
+  font-size: 1.2rem;
+  border-radius: 1rem;
+  color: var(--strategy-color);
+  background-color: var(--fancy-off-white);
+  white-space: pre-wrap;
 }
 </style>

@@ -5,6 +5,7 @@ export type Bug = {
   snack: string,
   image: string,
   calories: number,
+  strategy: string,
   isSelected?: boolean,
   hasBeenSeen?: boolean,
   hasBeenPhotographed?: boolean,
