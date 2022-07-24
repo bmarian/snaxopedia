@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-
-export type MainState = {
-  snaxopedia: { name: string, location: string, bug: string, snack: string, image: string }[]
-};
+import { Bug, MainState } from "../types";
 
 export const useStore = defineStore("main", {
-  state: () => ({ snaxopedia: [] } as MainState),
+  state: () => ({
+    snaxopedia: [],
+    selectedBug: null,
+  } as MainState),
   getters: {
     getLocations(state): string[] {
       const listOfLocations = state.snaxopedia.map((bug) => bug.location);
@@ -28,6 +28,24 @@ export const useStore = defineStore("main", {
         const jsonValue = await response.json();
         this.snaxopedia = jsonValue;
       } catch (err) { console.log(err); }
+    },
+    setSelectedBug(bug: Bug) {
+      this.selectedBug = bug;
+      this.snaxopedia = this.snaxopedia.map((snack: Bug) => ({ ...snack, isSelected: snack.name === bug.name }))
+    },
+    changeSeenStatus(seenStatus: boolean, bug: Bug) {
+      const { name } = bug;
+      this.snaxopedia = this.snaxopedia.map((snack: Bug) => {
+        if (snack.name !== name) return snack;
+        return { ...snack,  hasBeenSeen: seenStatus};
+      });
+    },
+    changePhotographedStatus(photographedStatus: boolean, bug: Bug) {
+      const { name } = bug;
+      this.snaxopedia = this.snaxopedia.map((snack: Bug) => {
+        if (snack.name !== name) return snack;
+        return { ...snack, hasBeenPhotographed: photographedStatus };
+      });
     },
   }
 });

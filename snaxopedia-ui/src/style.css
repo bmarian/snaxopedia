@@ -9,6 +9,10 @@
   --text-underline: #8FB0BD;
 
   --no-photo-bug: #BCB0AC;
+  --has-photo-bug: #A1ACB7;
+  --icon-color: #8F858C;
+
+  --seen-green: #31BE3E;
 }
 
 body {

@@ -17,13 +17,53 @@
           <span>{{ group.location }}</span>
         </h2>
         <ul class="group-bugs">
-          <li class="bug" v-for="bug in group.bugs" :key="bug.name">
+          <li
+            v-for="bug in group.bugs"
+            :key="bug.name"
+            :class="[
+              'bug',
+              { 'has-photo': bug.hasBeenPhotographed },
+              { 'is-selected': bug.isSelected },
+            ]"
+            @click="setSelectedBug(bug)"
+          >
             <img
               :src="bugImageURL(bug.name)"
               :alt="bug.name"
               :title="bug.name"
               class="bug-image"
             />
+            <span
+              v-if="bug.hasBeenSeen"
+              class="has-been-seen on material-symbols-outlined"
+              @click="changeSeenStatus(false, bug)"
+              >visibility</span
+            >
+            <span
+              v-else
+              class="has-been-seen off material-symbols-outlined"
+              @click="changeSeenStatus(true, bug)"
+              >visibility_off</span
+            >
+
+            <span
+              v-if="bug.hasBeenPhotographed"
+              class="has-been-photographed on material-symbols-outlined"
+              @click="changePhotographedStatus(false, bug)"
+              >check_circle</span
+            >
+            <span
+              v-else
+              class="has-been-photographed off material-symbols-outlined"
+              @click="
+                () => {
+                  changePhotographedStatus(true, bug);
+                  changeSeenStatus(true, bug);
+                }
+              "
+            >
+              circle</span
+            >
           </li>
         </ul>
       </div>
@@ -35,9 +75,12 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useStore } from "../stores/store";
+import { Bug } from "../types";
 
 const store = useStore();
+const { setSelectedBug, changeSeenStatus, changePhotographedStatus } = store;
 const { getBugsGroupedByLocation: bugsGroupedByLocation } = storeToRefs(store);
+
 const locationURL = (locationName: string) =>
   `http://localhost:8000/locations/${locationName}.webp`;
 const bugImageURL = (bugName: string) =>
@@ -109,16 +152,55 @@ const bugImageURL = (bugName: string) =>
   background-color: var(--no-photo-bug);
   margin: 0.3rem;
   border-radius: 1rem;
-}
-
-.group-bugs .bug:hover {
-  background-color: var(--accent-blue);
-  border: 0.3rem solid var(--font-color);
-  margin: 0rem;
-  border-radius: 1rem;
+  position: relative;
 }
 
 .group-bugs .bug .bug-image {
   width: 9rem;
+}
+
+.group-bugs .bug .has-been-seen,
+.group-bugs .bug .has-been-photographed {
+  position: absolute;
+  bottom: -0.2rem;
+  background-color: var(--font-color);
+  border-radius: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.group-bugs .bug .has-been-seen {
+  left: -0.2rem;
+}
+
+.group-bugs .bug .has-been-photographed {
+  right: -0.2rem;
+}
+
+.group-bugs .bug .has-been-seen.off,
+.group-bugs .bug .has-been-photographed.off {
+  color: var(--icon-color);
+}
+
+.group-bugs .bug .has-been-seen.on,
+.group-bugs .bug .has-been-photographed.on {
+  color: var(--seen-green);
+}
+
+.group-bugs .bug .has-been-seen.off:hover,
+.group-bugs .bug .has-been-photographed.off:hover {
+  color: var(--seen-green);
+}
+
+.group-bugs .bug.has-photo {
+  background-color: var(--has-photo-bug);
+}
+
+.group-bugs .bug:hover,
+.group-bugs .bug.is-selected {
+  background-color: var(--accent-blue);
+  border: 0.3rem solid var(--font-color);
+  margin: 0rem;
+  border-radius: 1rem;
 }
 </style>
