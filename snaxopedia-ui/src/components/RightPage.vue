@@ -19,7 +19,10 @@
         <span class="bug-image-bottom-left-triangle">◣</span>
         <span class="bug-image-bottom-right-triangle">◢</span>
       </div>
-      <Attribute v-if="selectedBug.attributes" :attributes="selectedBug.attributes"/>
+      <Attribute
+        v-if="selectedBug.attributes"
+        :attributes="selectedBug.attributes"
+      />
       <div v-if="selectedBug.strategy" class="bug-strategy">
         <p class="title">STRATEGY</p>
         <p class="strategy">
@@ -82,10 +85,11 @@ const parsePageContent = (page: string) => {
       ?.split?.("\n")
       ?.find?.((row: string) => row.includes("attributes"));
     const attributes = [
-      ...(attributesSection?.matchAll(/\[\[.*?Attribute (.*?)\..*?\]\]/g) || []),
+      ...(attributesSection?.matchAll(/\[\[.*?Attribute (.*?)\..*?\]\]/g) ||
+        []),
     ].map(([_, attribute]) => attribute);
 
-    if (attributes && attributes.length) data = { ...data, attributes };
+    if (attributes) data = { ...data, attributes };
   }
 
   if (data) modifyBug(selectedBug.value as Bug, data);
