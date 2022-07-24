@@ -8,7 +8,9 @@
         <span class="bug-image-top-right-triangle">◥</span>
         <div v-if="selectedBug.calories" class="calories-container">
           <span class="calories-title">CALORIES</span>
-          <span class="calories-number">{{ selectedBug.calories }}</span>
+          <span class="calories-number">{{
+            selectedBug.calories.toLocaleString("en-US")
+          }}</span>
         </div>
         <img
           :src="bugImageURL(selectedBug.name)"
