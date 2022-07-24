@@ -4,7 +4,7 @@ export type Bug = {
   bug: string,
   snack: string,
   image: string,
-  calories?: number,
+  calories?: string,
   strategy?: string,
   attributes?: string[],
   isSelected?: boolean,
@@ -14,5 +14,5 @@ export type Bug = {
 
 export type MainState = {
   snaxopedia: Bug[] | [],
-  selectedBug: Bug | null,
+  loading: boolean,
 };

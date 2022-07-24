@@ -5,7 +5,7 @@ import { nextTick } from 'vue';
 export const useStore = defineStore("main", {
   state: () => ({
     snaxopedia: [],
-    selectedBug: null,
+    loading: false,
   } as MainState),
   getters: {
     getLocations(state): string[] {
@@ -21,6 +21,9 @@ export const useStore = defineStore("main", {
         return [...acc, { location, bugs: bugsForLocation }];
       }, [])
     },
+    selectedBug(state): Bug | undefined {
+      return state.snaxopedia.find((snack: Bug) => snack.isSelected);
+    }
   },
   actions: {
     async loadSnaxopedia() {
@@ -29,13 +32,10 @@ export const useStore = defineStore("main", {
         const jsonValue = await response.json();
 
         this.snaxopedia = jsonValue;
-        this.selectedBug = jsonValue.find((snack: Bug) => snack.isSelected) || {};
       } catch (err) { console.log(err); }
     },
     setSelectedBug(bug: Bug) {
-      this.selectedBug = bug;
       this.snaxopedia = this.snaxopedia.map((snack: Bug) => ({ ...snack, isSelected: snack.name === bug.name }));
-
       this.saveSelectedData(bug);
     },
     modifyBug(bug: Bug, data: {} = {}) {
@@ -63,6 +63,9 @@ export const useStore = defineStore("main", {
       try {
         await fetch(`http://localhost:8000/snaxopedia/selected/${name}`);
       } catch (err) { console.log(err); }
+    },
+    setLoading(state: boolean) {
+      this.loading = state;
     }
   }
 });

@@ -8,9 +8,7 @@
         <span class="bug-image-top-right-triangle">◥</span>
         <div v-if="selectedBug.calories" class="calories-container">
           <span class="calories-title">CALORIES</span>
-          <span class="calories-number">{{
-            selectedBug.calories.toLocaleString("en-US")
-          }}</span>
+          <span class="calories-number">{{ selectedBug.calories }}</span>
         </div>
         <img
           :src="bugImageURL(selectedBug.name)"
@@ -21,6 +19,7 @@
         <span class="bug-image-bottom-left-triangle">◣</span>
         <span class="bug-image-bottom-right-triangle">◢</span>
       </div>
+      <Attribute v-if="selectedBug.attributes" :attributes="selectedBug.attributes"/>
       <div v-if="selectedBug.strategy" class="bug-strategy">
         <p class="title">STRATEGY</p>
         <p class="strategy">
@@ -36,8 +35,10 @@ import { watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useStore } from "../stores/store";
 import { Bug } from "../types";
+import Attribute from "./Attributes.vue";
 
 const store = useStore();
+const { modifyBug, setLoading } = store;
 const { selectedBug } = storeToRefs(store);
 
 const locationURL = (locationName: string) =>
@@ -45,28 +46,61 @@ const locationURL = (locationName: string) =>
 const bugImageURL = (bugName: string) =>
   `http://localhost:8000/bugs/${bugName}.png`;
 
-const cleanupFormatting = (formattedString: string): string => {};
+const cleanupFormatting = (formattedString: string): string => {
+  return formattedString
+    .replaceAll(/\[\[(.*?)\|.*?\]\]/g, (_match, $1) => $1)
+    .replaceAll(/\[\[(.*?)\]\]/g, (_match, $1) => $1);
+};
 
 const parsePageContent = (page: string) => {
   const sections: string[] = page.split(/^==(.*)==$/m);
-  const strategySectionIndex = sections.findIndex((section) =>
-    section.toLowerCase().includes("strategy")
-  );
-  const strategySection = cleanupFormatting(sections[strategySectionIndex + 1]);
+  let data = null;
 
-  console.log(strategySection, page);
-  debugger;
+  if (!selectedBug.value?.strategy) {
+    const strategySectionIndex = sections.findIndex((section) =>
+      section.toLowerCase().includes("strategy")
+    );
+    const strategySection = cleanupFormatting(
+      sections[strategySectionIndex + 1]
+    );
+    data = { strategy: strategySection };
+  }
+
+  if (typeof selectedBug.value?.calories === "undefined") {
+    const caloriesSection = sections
+      .find((section: string) => section.includes("calories"))
+      ?.split?.("\n")
+      ?.find?.((row: string) => row.includes("calories"));
+    const calories = caloriesSection?.match(/[\d,]+/g)?.[0];
+
+    if (calories) data = { ...data, calories };
+  }
+
+  if (!selectedBug.value?.attributes) {
+    const attributesSection = sections
+      .find((section: string) => section.includes("attributes"))
+      ?.split?.("\n")
+      ?.find?.((row: string) => row.includes("attributes"));
+    const attributes = [
+      ...(attributesSection?.matchAll(/\[\[.*?Attribute (.*?)\..*?\]\]/g) || []),
+    ].map(([_, attribute]) => attribute);
+
+    if (attributes && attributes.length) data = { ...data, attributes };
+  }
+
+  if (data) modifyBug(selectedBug.value as Bug, data);
+  setLoading(false);
 };
 
 watch(selectedBug, async (newValue) => {
   if (!newValue?.name) return;
-
   const hasAllAttributes = [
     newValue.strategy,
     newValue.attributes,
     newValue.calories,
   ].reduce((acc, attribute) => acc && typeof attribute !== "undefined", true);
   if (hasAllAttributes) return;
+  setLoading(true);
 
   const bugsnaxWikiAuthPage =
     "https://bugsnax.fandom.com/api.php?action=centralauthtoken&origin=*";
@@ -81,15 +115,21 @@ watch(selectedBug, async (newValue) => {
       // @ts-ignore
       Object.values(responseJSON?.query?.pages)?.[0]?.revisions
     );
-    if (!revisions) return;
-
+    if (!revisions) {
+      setLoading(false);
+      return;
+    }
     // @ts-ignore
     const pageContent = revisions[revisions.length - 1]?.["*"];
-    if (!pageContent) return;
+    if (!pageContent) {
+      setLoading(false);
+      return;
+    }
 
     parsePageContent(pageContent);
   } catch (err) {
     console.log(err);
+    setLoading(false);
   }
 });
 </script>
