@@ -36,30 +36,35 @@
             <span
               v-if="bug.hasBeenSeen"
               class="has-been-seen on material-symbols-outlined"
-              @click="changeSeenStatus(false, bug)"
+              @click.stop="
+                changeBugStatus(bug, {
+                  hasBeenSeen: false,
+                  hasBeenPhotographed: false,
+                })
+              "
               >visibility</span
             >
             <span
               v-else
               class="has-been-seen off material-symbols-outlined"
-              @click="changeSeenStatus(true, bug)"
+              @click.stop="changeBugStatus(bug, { hasBeenSeen: true })"
               >visibility_off</span
             >
 
             <span
               v-if="bug.hasBeenPhotographed"
               class="has-been-photographed on material-symbols-outlined"
-              @click="changePhotographedStatus(false, bug)"
+              @click.stop="changeBugStatus(bug, { hasBeenPhotographed: false })"
               >check_circle</span
             >
             <span
               v-else
               class="has-been-photographed off material-symbols-outlined"
-              @click="
-                () => {
-                  changePhotographedStatus(true, bug);
-                  changeSeenStatus(true, bug);
-                }
+              @click.stop="
+                changeBugStatus(bug, {
+                  hasBeenSeen: true,
+                  hasBeenPhotographed: true,
+                })
               "
             >
               circle</span
@@ -78,13 +83,20 @@ import { useStore } from "../stores/store";
 import { Bug } from "../types";
 
 const store = useStore();
-const { setSelectedBug, changeSeenStatus, changePhotographedStatus } = store;
+const { setSelectedBug, modifyBug } = store;
 const { getBugsGroupedByLocation: bugsGroupedByLocation } = storeToRefs(store);
 
 const locationURL = (locationName: string) =>
   `http://localhost:8000/locations/${locationName}.webp`;
 const bugImageURL = (bugName: string) =>
   `http://localhost:8000/bugs/${bugName}.png`;
+
+const changeBugStatus = (
+  bug: Bug,
+  data: { hasBeenSeen?: boolean; hasBeenPhotographed?: boolean; isSelected?: boolean }
+) => {
+  modifyBug(bug, data);
+};
 </script>
 
 <style scoped>

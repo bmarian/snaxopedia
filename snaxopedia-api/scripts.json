@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "start": "index.ts"
+  },
+  "watcher": {
+    "interval": 350,
+    "exts": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx"
+    ],
+    "skip": [
+      "*/.git/*",
+      "*/.vscode/*",
+      "*/assets/*"
+    ]
+  }
+}

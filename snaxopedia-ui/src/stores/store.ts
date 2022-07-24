@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Bug, MainState } from "../types";
+import { nextTick } from 'vue';
 
 export const useStore = defineStore("main", {
   state: () => ({
@@ -13,7 +14,7 @@ export const useStore = defineStore("main", {
     },
     getBugsGroupedByLocation(state) {
       const locations: string[] = this.getLocations;
-      return locations.reduce((acc: {}[], location: string) => {
+      return locations.reduce((acc: { location: string, bugs: Bug[] }[], location: string) => {
         const bugsForLocation = state.snaxopedia
           .filter((bug) => bug.location === location)
           .sort((a, b) => a.name.localeCompare(b.name));
@@ -31,21 +32,35 @@ export const useStore = defineStore("main", {
     },
     setSelectedBug(bug: Bug) {
       this.selectedBug = bug;
-      this.snaxopedia = this.snaxopedia.map((snack: Bug) => ({ ...snack, isSelected: snack.name === bug.name }))
+      this.snaxopedia = this.snaxopedia.map((snack: Bug) => ({ ...snack, isSelected: snack.name === bug.name }));
+
+      this.saveSelectedData(bug);
     },
-    changeSeenStatus(seenStatus: boolean, bug: Bug) {
+    modifyBug(bug: Bug, data: {} = {}) {
       const { name } = bug;
       this.snaxopedia = this.snaxopedia.map((snack: Bug) => {
-        if (snack.name !== name) return snack;
-        return { ...snack,  hasBeenSeen: seenStatus};
+        if (snack.name !== name) return { ...snack };
+
+        const modifiedSnack = { ...snack, ...data };
+        this.saveBugData(modifiedSnack);
+        return modifiedSnack;
       });
     },
-    changePhotographedStatus(photographedStatus: boolean, bug: Bug) {
+    async saveBugData(bug: Bug) {
       const { name } = bug;
-      this.snaxopedia = this.snaxopedia.map((snack: Bug) => {
-        if (snack.name !== name) return snack;
-        return { ...snack, hasBeenPhotographed: photographedStatus };
-      });
+      try {
+        await fetch(`http://localhost:8000/snaxopedia/${name}`, {
+          method: "POST",
+          mode: 'cors',
+          body: JSON.stringify(bug)
+        });
+      } catch (err) { console.log(err); }
     },
+    async saveSelectedData(bug: Bug) {
+      const { name } = bug;
+      try {
+        await fetch(`http://localhost:8000/snaxopedia/selected/${name}`);
+      } catch (err) { console.log(err); }
+    }
   }
 });
