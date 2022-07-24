@@ -27,7 +27,9 @@ export const useStore = defineStore("main", {
       try {
         const response = await fetch("http://localhost:8000/snaxopedia");
         const jsonValue = await response.json();
+
         this.snaxopedia = jsonValue;
+        this.selectedBug = jsonValue.find((snack: Bug) => snack.isSelected) || {};
       } catch (err) { console.log(err); }
     },
     setSelectedBug(bug: Bug) {

@@ -77,7 +77,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useStore } from "../stores/store";
 import { Bug } from "../types";
@@ -93,7 +92,11 @@ const bugImageURL = (bugName: string) =>
 
 const changeBugStatus = (
   bug: Bug,
-  data: { hasBeenSeen?: boolean; hasBeenPhotographed?: boolean; isSelected?: boolean }
+  data: {
+    hasBeenSeen?: boolean;
+    hasBeenPhotographed?: boolean;
+    isSelected?: boolean;
+  }
 ) => {
   modifyBug(bug, data);
 };

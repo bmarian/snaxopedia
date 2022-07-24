@@ -1,12 +1,29 @@
 <template>
   <div class="right-page">
     <header class="header"></header>
-    <div class="bug-info"></div>
+    <div v-if="selectedBug?.name" class="bug-info">
+      <img
+        :src="bugImageURL(selectedBug?.name)"
+        :alt="selectedBug?.name"
+        :title="selectedBug?.name"
+        class="bug-image"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { useStore } from "../stores/store";
+import { Bug } from "../types";
+
+const store = useStore();
+const { selectedBug } = storeToRefs(store);
+
+const locationURL = (locationName: string) =>
+  `http://localhost:8000/locations/${locationName}.webp`;
+const bugImageURL = (bugName: string) =>
+  `http://localhost:8000/bugs/${bugName}.png`;
 </script>
 
 <style scoped>
