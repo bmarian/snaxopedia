@@ -4,6 +4,7 @@ export type Bug = {
   bug: string, 
   snack: string, 
   image: string,
+  calories: number,
   isSelected?: boolean,
   hasBeenSeen?: boolean,
   hasBeenPhotographed?: boolean,
