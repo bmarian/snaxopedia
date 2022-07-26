@@ -1,6 +1,5 @@
-import { defineStore } from "pinia";
-import { Bug, MainState } from "../types";
-import { nextTick } from 'vue';
+import {defineStore} from "pinia";
+import {Bug, MainState} from "../types";
 
 export const useStore = defineStore("main", {
   state: () => ({
@@ -29,9 +28,7 @@ export const useStore = defineStore("main", {
     async loadSnaxopedia() {
       try {
         const response = await fetch("http://localhost:8000/snaxopedia");
-        const jsonValue = await response.json();
-
-        this.snaxopedia = jsonValue;
+        this.snaxopedia = await response.json();
       } catch (err) { console.log(err); }
     },
     setSelectedBug(bug: Bug) {
