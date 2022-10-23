@@ -175,6 +175,11 @@ body {
   width: 9rem;
 }
 
+.has-been-seen.hidden,
+.has-been-photographed.hidden {
+  display: none;
+}
+
 .group-bugs .bug .has-been-seen,
 .group-bugs .bug .has-been-photographed {
   position: absolute;
