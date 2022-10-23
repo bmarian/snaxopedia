@@ -1,0 +1,132 @@
+.right-page {
+  height: 100%;
+  width: 50vw;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.header {
+  background-color: var(--accent-blue);
+  height: 1.5rem;
+  width: 100%;
+}
+
+.bug-info {
+  height: calc(100% - 1.5rem);
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}
+
+.bug-info .bug-name {
+  color: var(--font-color);
+  background-color: var(--accent-blue);
+
+  margin: 1rem;
+  font-size: 4rem;
+  padding: 0.2rem 1rem;
+  border-radius: 1rem;
+}
+.bug-info .bug-image-container {
+  width: 90%;
+  max-height: 30%;
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-content: center;
+
+  background-color: var(--no-photo-bug);
+  border: 1rem solid var(--fancy-off-white);
+  box-shadow: 0px 0px 5px 1px;
+}
+.bug-info .bug-image-container .bug-image-top-left-triangle,
+.bug-info .bug-image-container .bug-image-top-right-triangle,
+.bug-info .bug-image-container .bug-image-bottom-left-triangle,
+.bug-info .bug-image-container .bug-image-bottom-right-triangle {
+  position: absolute;
+  color: var(--location-font-color);
+  font-size: 7rem;
+}
+.bug-info .bug-image-container .bug-image-top-left-triangle {
+  left: -2rem;
+  top: -3.5rem;
+}
+.bug-info .bug-image-container .bug-image-top-right-triangle {
+  right: -2rem;
+  top: -3.5rem;
+}
+.bug-info .bug-image-container .bug-image-bottom-left-triangle {
+  left: -2rem;
+  bottom: -3.5rem;
+}
+.bug-info .bug-image-container .bug-image-bottom-right-triangle {
+  right: -2rem;
+  bottom: -3.5rem;
+}
+
+.bug-info .bug-image-container .calories-container {
+  position: absolute;
+  left: 1.5rem;
+  top: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bug-info .bug-image-container .calories-container .calories-title {
+  font-size: 2rem;
+  color: var(--accent-blue);
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--font-color);
+  z-index: 1;
+}
+
+.bug-info .bug-image-container .calories-container .calories-number {
+  font-size: 1.5rem;
+  background-color: var(--fancy-off-white);
+  color: var(--calories-number-color);
+  padding: 0.5rem 3.3rem;
+  border-radius: 0.2rem;
+  margin-top: -0.9rem;
+  z-index: 0;
+}
+
+.bug-info .bug-image-container .right-bug-image {
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+}
+
+.bug-info .bug-strategy {
+  width: 90%;
+  position: relative;
+  margin-top: 1.5rem;
+}
+
+.bug-info .bug-strategy .title {
+  font-size: 2.5rem;
+  position: absolute;
+  top: -3rem;
+  left: 1rem;
+
+  color: var(--accent-blue);
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--font-color);
+}
+
+.bug-info .bug-strategy .strategy {
+  padding: 1rem 1rem;
+  font-size: 1.2rem;
+  border-radius: 1rem;
+  color: var(--strategy-color);
+  background-color: var(--fancy-off-white);
+  white-space: pre-wrap;
+}

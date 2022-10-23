@@ -4,10 +4,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { watch } from "vue";
-</script>
-
 <style scoped>
 .loader-container {
   position: absolute;
@@ -20,12 +16,14 @@ import { watch } from "vue";
   align-items: center;
   justify-content: center;
 }
+
 .loader,
 .loader:after {
   border-radius: 50%;
   width: 10em;
   height: 10em;
 }
+
 .loader {
   margin: 60px auto;
   font-size: 10px;
@@ -41,21 +39,25 @@ import { watch } from "vue";
   -webkit-animation: load8 1.1s infinite linear;
   animation: load8 1.1s infinite linear;
 }
+
 @-webkit-keyframes load8 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
+
 @keyframes load8 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
