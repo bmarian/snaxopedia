@@ -271,6 +271,7 @@ const generateBug = (bug: Bug): HTMLElement => {
   const bugClasses = `bug${hasBeenPhotographed ? ' has-photo' : ''}${isSelected ? ' is-selected' : ''}`;
   const bugId = generateId(bug.name)
 
+  const bugElement = document.createElement('li')
   const changeBugStateEvent = (data: { hasBeenSeen?: boolean, hasBeenPhotographed?: boolean, isSelected?: boolean, }) => (evt: any) => {
     evt.stopPropagation()
 
@@ -298,16 +299,17 @@ const generateBug = (bug: Bug): HTMLElement => {
 
     if (typeof hasBeenPhotographed !== 'undefined') {
       if (hasBeenPhotographed) {
+        bugElement.classList.add('has-photo')
         photographedOnElement.classList.remove('hidden')
         photographedOffElement.classList.add('hidden')
       } else {
+        bugElement.classList.remove('has-photo')
         photographedOnElement.classList.add('hidden')
         photographedOffElement.classList.remove('hidden')
       }
     }
   }
 
-  const bugElement = document.createElement('li')
   bugElement.id = generateId(bug.name)
   bugElement.className = bugClasses
   bugElement.onclick = () => setSelectedBug(bug)
