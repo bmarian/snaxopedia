@@ -1,3 +1,4 @@
+/* MAIN APP */
 :root {
   --background-color: #D5CBCD;
   --accent-blue: #31B4C3;
@@ -35,3 +36,399 @@ body {
   height: 100%;
   display: flex;
 }
+/* MAIN APP */
+
+/* LOADING */
+.loader-container {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(0, 0, 0, 0.2);
+
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-container.hidden {
+  display: none;
+}
+
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+
+.loader {
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-left: 1.1em solid #ffffff;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+/* LOADING */
+
+/* LEFT PAGE */
+.left-page {
+  height: 100%;
+  width: 50vw;
+}
+
+.left-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
+  background-color: var(--accent-blue);
+  height: 5rem;
+  width: 100%;
+}
+
+.left-header .title {
+  color: var(--font-color);
+  font-size: 2.5rem;
+}
+
+.locations-list {
+  height: calc(100% - 5rem);
+  width: 100%;
+  overflow-y: auto;
+}
+
+.group-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: nowrap;
+}
+
+.group-title .location-image {
+  transform: rotate(-15deg);
+  width: 10rem;
+}
+
+.group-title span {
+  position: relative;
+  color: var(--location-font-color);
+  text-shadow: 2px 2px var(--text-shadow);
+  font-size: 3rem;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--font-color);
+  -webkit-text-fill-color: var(--location-font-color);
+}
+
+.group-bugs {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  margin: 0;
+  padding: 0;
+}
+
+.group-bugs .bug {
+  background-color: var(--no-photo-bug);
+  margin: 0.3rem;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.group-bugs .bug .bug-image {
+  width: 9rem;
+}
+
+.group-bugs .bug .has-been-seen,
+.group-bugs .bug .has-been-photographed {
+  position: absolute;
+  bottom: -0.2rem;
+  background-color: var(--font-color);
+  border-radius: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.group-bugs .bug .has-been-seen {
+  left: -0.2rem;
+}
+
+.group-bugs .bug .has-been-photographed {
+  right: -0.2rem;
+}
+
+.group-bugs .bug .has-been-seen.off,
+.group-bugs .bug .has-been-photographed.off {
+  color: var(--icon-color);
+}
+
+.group-bugs .bug .has-been-seen.on,
+.group-bugs .bug .has-been-photographed.on {
+  color: var(--seen-green);
+}
+
+.group-bugs .bug .has-been-seen.off:hover,
+.group-bugs .bug .has-been-photographed.off:hover {
+  color: var(--seen-green);
+}
+
+.group-bugs .bug.has-photo {
+  background-color: var(--has-photo-bug);
+}
+
+.group-bugs .bug:hover,
+.group-bugs .bug.is-selected {
+  background-color: var(--accent-blue);
+  border: 0.3rem solid var(--font-color);
+  margin: 0rem;
+  border-radius: 1rem;
+}
+/* LEFT PAGE */
+
+/* RIGHT PAGE */
+.right-page {
+  height: 100%;
+  width: 50vw;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.header {
+  background-color: var(--accent-blue);
+  height: 1.5rem;
+  width: 100%;
+}
+
+.bug-info {
+  height: calc(100% - 1.5rem);
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}
+
+.bug-info .bug-name {
+  color: var(--font-color);
+  background-color: var(--accent-blue);
+
+  margin: 1rem;
+  font-size: 4rem;
+  padding: 0.2rem 1rem;
+  border-radius: 1rem;
+}
+.bug-info .bug-image-container {
+  width: 90%;
+  max-height: 30%;
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-content: center;
+
+  background-color: var(--no-photo-bug);
+  border: 1rem solid var(--fancy-off-white);
+  box-shadow: 0px 0px 5px 1px;
+}
+.bug-info .bug-image-container .bug-image-top-left-triangle,
+.bug-info .bug-image-container .bug-image-top-right-triangle,
+.bug-info .bug-image-container .bug-image-bottom-left-triangle,
+.bug-info .bug-image-container .bug-image-bottom-right-triangle {
+  position: absolute;
+  color: var(--location-font-color);
+  font-size: 7rem;
+}
+.bug-info .bug-image-container .bug-image-top-left-triangle {
+  left: -2rem;
+  top: -3.5rem;
+}
+.bug-info .bug-image-container .bug-image-top-right-triangle {
+  right: -2rem;
+  top: -3.5rem;
+}
+.bug-info .bug-image-container .bug-image-bottom-left-triangle {
+  left: -2rem;
+  bottom: -3.5rem;
+}
+.bug-info .bug-image-container .bug-image-bottom-right-triangle {
+  right: -2rem;
+  bottom: -3.5rem;
+}
+
+.bug-info .bug-image-container .calories-container {
+  position: absolute;
+  left: 1.5rem;
+  top: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bug-info .bug-image-container .calories-container .calories-title {
+  font-size: 2rem;
+  color: var(--accent-blue);
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--font-color);
+  z-index: 1;
+}
+
+.bug-info .bug-image-container .calories-container .calories-number {
+  font-size: 1.5rem;
+  background-color: var(--fancy-off-white);
+  color: var(--calories-number-color);
+  padding: 0.5rem 3.3rem;
+  border-radius: 0.2rem;
+  margin-top: -0.9rem;
+  z-index: 0;
+}
+
+.bug-info .bug-image-container .right-bug-image {
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+}
+
+.bug-info .bug-strategy {
+  width: 90%;
+  position: relative;
+  margin-top: 1.5rem;
+}
+
+.bug-info .bug-strategy .title {
+  font-size: 2.5rem;
+  position: absolute;
+  top: -3rem;
+  left: 1rem;
+
+  color: var(--accent-blue);
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--font-color);
+}
+
+.bug-info .bug-strategy .strategy {
+  padding: 1rem 1rem;
+  font-size: 1.2rem;
+  border-radius: 1rem;
+  color: var(--strategy-color);
+  background-color: var(--fancy-off-white);
+  white-space: pre-wrap;
+}
+/* RIGHT PAGE */
+
+
+/* ATTRIBUTES */
+.attributes {
+  margin-top: 1rem;
+  width: 90%;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.attributes .attribute-label {
+  color: var(--font-color);
+  font-size: 1.6rem;
+  padding: 0.3rem 1rem;
+  margin: 0.3rem;
+  border-radius: 0.5rem;
+
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--attribute-brown-outline);
+}
+
+.attributes .attribute-label.aggressive {
+  background-color: #c23343;
+}
+
+.attributes .attribute-label.sweet {
+  background-color: #ca5aa0;
+}
+
+.attributes .attribute-label.frosty {
+  background-color: #87b2bd;
+}
+
+.attributes .attribute-label.fruity {
+  background-color: #e5be60;
+}
+
+.attributes .attribute-label.evasive {
+  background-color: #daaa20;
+}
+
+.attributes .attribute-label.red {
+  background-color: #86222f;
+}
+
+.attributes .attribute-label.breakable {
+  background-color: #3eacad;
+}
+
+.attributes .attribute-label.meaty {
+  background-color: #883214;
+}
+
+.attributes .attribute-label.spicy {
+  background-color: #d67623;
+}
+
+.attributes .attribute-label.flying {
+  background-color: #2565d1;
+}
+
+.attributes .attribute-label.green {
+  background-color: #82b34a;
+}
+
+.attributes .attribute-label.sticky {
+  background-color: #973ec3;
+}
+
+.attributes .attribute-label.burrowing {
+  background-color: #a7724a;
+}
+/* ATTRIBUTES */
