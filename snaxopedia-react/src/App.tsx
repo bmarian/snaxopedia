@@ -68,10 +68,9 @@ export default function App() {
 
   useEffect(() => { loadSnaxopedia() }, [])
 
-  const groupedSnaxopedia = getBugsGroupedByLocation()
   return (<>
-    <LeftPage snaxopedia={groupedSnaxopedia} modifyBug={modifyBug} setSelectedBug={setSelectedBug} />
-    {/* <RightPage selectedBug={getSelectedBug()} /> */}
+    <LeftPage snaxopedia={getBugsGroupedByLocation()} modifyBug={modifyBug} setSelectedBug={setSelectedBug} />
+    <RightPage selectedBug={getSelectedBug()} />
     {loading && <Loading></Loading>}
   </>)
 }
