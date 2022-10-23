@@ -38,7 +38,7 @@ export default function App() {
   }, [snaxopedia])
   const getBugsGroupedByLocation = useCallback(() => {
     const locations: string[] = getLocations();
-    return locations.reduce((acc: { location, bugs }[], location: string) => {
+    return locations.reduce((acc: { location: any, bugs: any[] }[], location: string) => {
       const bugsForLocation = snaxopedia
         .filter((bug) => bug.location === location)
         .sort((a, b) => a.name.localeCompare(b.name));
