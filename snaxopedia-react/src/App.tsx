@@ -59,12 +59,12 @@ export default function App() {
     });
     setSnaxopedia(newSnaxopedia);
   }, [snaxopedia])
-  const setSelectedBug = (bug: Bug) => {
+  const setSelectedBug = useCallback((bug: Bug) => {
     const newSnaxopedia = snaxopedia.map((snack: Bug) => ({ ...snack, isSelected: snack.name === bug.name }));
     setSnaxopedia(newSnaxopedia)
 
     saveSelectedData(bug);
-  }
+  }, [snaxopedia])
 
   useEffect(() => { loadSnaxopedia() }, [])
   const groupedSnaxopedia = useMemo(() => getBugsGroupedByLocation(), [snaxopedia])

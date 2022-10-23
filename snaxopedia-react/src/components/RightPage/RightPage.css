@@ -10,6 +10,7 @@
   height: 1.5rem;
   width: 100%;
 }
+
 .bug-info {
   height: calc(100% - 1.5rem);
   width: 100%;
@@ -98,7 +99,7 @@
   z-index: 0;
 }
 
-.bug-info .bug-image-container .bug-image {
+.bug-info .bug-image-container .right-bug-image {
   max-width: 100%;
   max-height: 100%;
   aspect-ratio: 1;
