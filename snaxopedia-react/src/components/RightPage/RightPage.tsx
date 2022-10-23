@@ -1,3 +1,4 @@
+import React from "react"
 import { useCallback, useEffect } from "react"
 import { Bug as BugType } from "../../types"
 import Attribute from "../Attribute/Attribute"
@@ -15,7 +16,7 @@ export default function RightPage(props: any) {
 
   const parsePageContent = useCallback((page: string) => {
     const sections: string[] = page.split(/^==(.*)==$/m)
-    let data = null
+    let data: any = null
 
     if (!selectedBug?.strategy) {
       const strategySectionIndex = sections.findIndex((section) =>
