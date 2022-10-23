@@ -78,17 +78,18 @@ const generateId = (bugName: string): string => {
   return bugName.toLowerCase().replaceAll(' ', '').replaceAll('\'', '')
 }
 
-const setSelectedBug = (bug: Bug): void => {
-  const newSnaxopedia = snaxopedia.map((snack: Bug) => ({ ...snack, isSelected: snack.name === bug.name }))
+const toggleLoading = (loading: boolean): void => {
+  const loader = document.querySelector('.loader-container')
+  if (!loader) return
 
-  const selectedBugs = document.querySelectorAll('.is-selected')
-  if (selectedBugs.length) selectedBugs.forEach((el) => { el.classList.remove('is-selected') })
+  if (loading) loader.classList.remove('hidden')
+  else loader.classList.add('hidden')
+}
 
-  const bugToSelect = document.querySelector(`#${generateId(bug.name)}`)
-  if (bugToSelect) bugToSelect.classList.add('is-selected')
-
-  changeSnaxopedia(newSnaxopedia)
-  saveSelectedData(bug)
+const cleanupFormatting = (formattedString: string): string => {
+  return formattedString
+    .replaceAll(/\[\[(.*?)\|.*?\]\]/g, (_match, $1) => $1)
+    .replaceAll(/\[\[(.*?)\]\]/g, (_match, $1) => $1)
 }
 
 const modifyBug = (bug: Bug, data: {} = {}): void => {
@@ -103,15 +104,169 @@ const modifyBug = (bug: Bug, data: {} = {}): void => {
   changeSnaxopedia(newSnaxopedia)
 }
 
-const toggleLoading = (loading: boolean): void => {
-  const loader = document.querySelector('.loader-container')
-  if (!loader) return
+const parsePageContent = (page: string): void => {
+  const selectedBug = getSelectedBug()
+  const sections: string[] = page.split(/^==(.*)==$/m)
+  let data: any = null
 
-  if (loading) loader.classList.remove("hidden")
-  else loader.classList.add("hidden")
+  if (!selectedBug?.strategy) {
+    const strategySectionIndex = sections.findIndex((section) =>
+      section.toLowerCase().includes("strategy")
+    )
+    const strategySection = cleanupFormatting(
+      sections[strategySectionIndex + 1]
+    )
+    data = { strategy: strategySection }
+  }
+
+  if (typeof selectedBug?.calories === "undefined") {
+    const caloriesSection = sections
+      .find((section: string) => section.includes("calories"))
+      ?.split?.("\n")
+      ?.find?.((row: string) => row.includes("calories"))
+    const calories = caloriesSection?.match(/[\d,]+/g)?.[0]
+
+    if (calories) data = { ...data, calories }
+  }
+
+  if (!selectedBug?.attributes) {
+    const attributesSection = sections
+      .find((section: string) => section.includes("attributes"))
+      ?.split?.("\n")
+      ?.find?.((row: string) => row.includes("attributes"))
+    const attributes = [
+      ...(attributesSection?.matchAll(/\[\[.*?Attribute (.*?)\..*?\]\]/g) ||
+        []),
+    ].map(([_, attribute]) => attribute)
+
+    if (attributes) data = { ...data, attributes }
+  }
+
+  if (data) modifyBug(selectedBug as Bug, data)
+  toggleLoading(false)
 }
 
-const generateBug = (bug: Bug) => {
+const updateSelected = async (): Promise<void> => {
+  const selectedBug = getSelectedBug()
+  if (!selectedBug?.name) return
+
+  const hasAllAttributes = [
+    selectedBug.strategy,
+    selectedBug.attributes,
+    selectedBug.calories,
+  ].reduce((acc, attribute) => acc && typeof attribute !== "undefined", true)
+  if (hasAllAttributes) return
+  toggleLoading(true)
+
+  const bugsnaxWikiAuthPage = "https://bugsnax.fandom.com/api.php?action=centralauthtoken&origin=*"
+  const bugsnaxWikiPage = `https://bugsnax.fandom.com/api.php?action=query&titles=${selectedBug.name}&gaplimit=5&prop=revisions&rvprop=content&format=json&origin=*`
+
+  try {
+    await fetch(bugsnaxWikiAuthPage, { mode: "cors" })
+    const response = await fetch(bugsnaxWikiPage, { mode: "cors" })
+    const responseJSON = await response.json()
+
+    const revisions = Object.values(
+      // @ts-ignore
+      Object.values(responseJSON?.query?.pages)?.[0]?.revisions
+    )
+    if (!revisions) {
+      toggleLoading(false)
+      return
+    }
+    // @ts-ignore
+    const pageContent = revisions[revisions.length - 1]?.["*"]
+    if (!pageContent) {
+      toggleLoading(false)
+      return
+    }
+
+    parsePageContent(pageContent)
+  } catch (err) {
+    console.log(err)
+    toggleLoading(false)
+  }
+}
+
+const generateBugInfoForSelectedBug = async (): Promise<void> => {
+  const bugInfoElement = document.querySelector('.bug-info')
+  if (!bugInfoElement) return
+
+  await updateSelected()
+
+  const selectedBug = getSelectedBug()
+  if (!selectedBug) {
+    bugInfoElement.classList.add('hidden')
+    return
+  }
+
+  bugInfoElement.classList.remove('hidden')
+  const bugNameElement = bugInfoElement.querySelector('.bug-name') as HTMLParagraphElement
+  if (bugNameElement) bugNameElement.innerText = selectedBug.name
+
+  const caloriesContainerElement = bugInfoElement.querySelector('.calories-container')
+  if (caloriesContainerElement) {
+    if (typeof selectedBug.calories !== 'undefined') {
+      caloriesContainerElement.classList.remove('hidden')
+      const caloriesNumberElement = caloriesContainerElement.querySelector('.calories-number') as HTMLParagraphElement
+      if (caloriesNumberElement) caloriesNumberElement.innerText = selectedBug.calories
+    } else {
+      caloriesContainerElement.classList.add('hidden')
+    }
+  }
+
+  const bugImageElement = bugInfoElement.querySelector('.right-bug-image') as HTMLImageElement
+  if (bugImageElement) {
+    bugImageElement.src = bugImageURL(selectedBug.name)
+    bugImageElement.alt = selectedBug.name
+    bugImageElement.title = selectedBug.name
+  }
+
+  const attributesElement = bugInfoElement.querySelector('.attributes')
+  if (attributesElement) {
+    if (selectedBug.attributes) {
+      attributesElement.classList.remove('hidden')
+      attributesElement.innerHTML = ''
+
+      selectedBug.attributes.forEach((attr: string) => {
+        const attrElement = document.createElement('span')
+        attrElement.innerText = attr.toUpperCase()
+        attrElement.className = `attribute-label ${attr.toLowerCase()}`
+
+        attributesElement.appendChild(attrElement)
+      })
+    } else {
+      attributesElement.classList.add('hidden')
+    }
+  }
+
+  const bugStrategyElement = bugInfoElement.querySelector('.bug-strategy')
+  if (bugStrategyElement) {
+    if (selectedBug.strategy) {
+      bugStrategyElement.classList.remove('hidden')
+      const strategyElement = bugInfoElement.querySelector('.strategy') as HTMLParagraphElement
+      if (strategyElement) strategyElement.innerText = selectedBug.strategy
+    } else {
+      bugStrategyElement.classList.add('hidden')
+    }
+  }
+}
+
+const setSelectedBug = (bug: Bug): void => {
+  const newSnaxopedia = snaxopedia.map((snack: Bug) => ({ ...snack, isSelected: snack.name === bug.name }))
+
+  const selectedBugs = document.querySelectorAll('.is-selected')
+  if (selectedBugs.length) selectedBugs.forEach((el) => { el.classList.remove('is-selected') })
+
+  const bugToSelect = document.querySelector(`#${generateId(bug.name)}`)
+  if (bugToSelect) bugToSelect.classList.add('is-selected')
+
+  changeSnaxopedia(newSnaxopedia)
+  saveSelectedData(bug)
+  generateBugInfoForSelectedBug()
+}
+
+const generateBug = (bug: Bug): HTMLElement => {
   const { hasBeenPhotographed, hasBeenSeen, isSelected } = bug
   const bugClasses = `bug${hasBeenPhotographed ? ' has-photo' : ''}${isSelected ? ' is-selected' : ''}`;
   const bugId = generateId(bug.name)
@@ -233,4 +388,5 @@ const generateLocationList = (): void => {
 (async () => {
   await loadSnaxopedia()
   generateLocationList()
+  await generateBugInfoForSelectedBug()
 })()

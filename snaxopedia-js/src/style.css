@@ -36,6 +36,10 @@ body {
   height: 100%;
   display: flex;
 }
+
+.hidden {
+  display: none !important;
+}
 /* MAIN APP */
 
 /* LOADING */
@@ -49,10 +53,6 @@ body {
   align-content: center;
   align-items: center;
   justify-content: center;
-}
-
-.loader-container.hidden {
-  display: none;
 }
 
 .loader,
@@ -173,11 +173,6 @@ body {
 
 .group-bugs .bug .bug-image {
   width: 9rem;
-}
-
-.has-been-seen.hidden,
-.has-been-photographed.hidden {
-  display: none;
 }
 
 .group-bugs .bug .has-been-seen,
