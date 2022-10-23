@@ -1,0 +1,115 @@
+.left-page {
+  height: 100%;
+  width: 50vw;
+}
+
+.left-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
+  background-color: var(--accent-blue);
+  height: 5rem;
+  width: 100%;
+}
+
+.left-header .title {
+  color: var(--font-color);
+  font-size: 2.5rem;
+}
+
+.locations-list {
+  height: calc(100% - 5rem);
+  width: 100%;
+  overflow-y: auto;
+}
+
+.group-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: nowrap;
+}
+
+.group-title .location-image {
+  transform: rotate(-15deg);
+  width: 10rem;
+}
+
+.group-title span {
+  position: relative;
+  color: var(--location-font-color);
+  text-shadow: 2px 2px var(--text-shadow);
+  font-size: 3rem;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--font-color);
+  -webkit-text-fill-color: var(--location-font-color);
+}
+
+.group-bugs {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  margin: 0;
+  padding: 0;
+}
+
+.group-bugs .bug {
+  background-color: var(--no-photo-bug);
+  margin: 0.3rem;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.group-bugs .bug .bug-image {
+  width: 9rem;
+}
+
+.group-bugs .bug .has-been-seen,
+.group-bugs .bug .has-been-photographed {
+  position: absolute;
+  bottom: -0.2rem;
+  background-color: var(--font-color);
+  border-radius: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.group-bugs .bug .has-been-seen {
+  left: -0.2rem;
+}
+
+.group-bugs .bug .has-been-photographed {
+  right: -0.2rem;
+}
+
+.group-bugs .bug .has-been-seen.off,
+.group-bugs .bug .has-been-photographed.off {
+  color: var(--icon-color);
+}
+
+.group-bugs .bug .has-been-seen.on,
+.group-bugs .bug .has-been-photographed.on {
+  color: var(--seen-green);
+}
+
+.group-bugs .bug .has-been-seen.off:hover,
+.group-bugs .bug .has-been-photographed.off:hover {
+  color: var(--seen-green);
+}
+
+.group-bugs .bug.has-photo {
+  background-color: var(--has-photo-bug);
+}
+
+.group-bugs .bug:hover,
+.group-bugs .bug.is-selected {
+  background-color: var(--accent-blue);
+  border: 0.3rem solid var(--font-color);
+  margin: 0rem;
+  border-radius: 1rem;
+}
