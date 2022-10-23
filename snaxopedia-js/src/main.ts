@@ -30,7 +30,7 @@ const changeSnaxopedia = (newSnaxopedia: any): void => {
     return [...new Set(listOfLocations.sort((a: string, b: string) => a.localeCompare(b)))] as string[]
   }
 
-  const groupBugsByLocation = (): {location: string, bugs: Bug[]}[] => {
+  const groupBugsByLocation = (): { location: string, bugs: Bug[] }[] => {
     const locations: string[] = getLocations()
     return locations.reduce((acc: { location: any, bugs: any[] }[], location: string) => {
       const bugsForLocation = newSnaxopedia
@@ -74,7 +74,9 @@ const getSelectedBug = (): Bug | undefined => {
   return snaxopedia.find((snack) => snack.isSelected)
 }
 
-const generateId = (bugName: string): string => bugName.toLowerCase().replaceAll(' ', '').replaceAll('\'', '')
+const generateId = (bugName: string): string => {
+  return bugName.toLowerCase().replaceAll(' ', '').replaceAll('\'', '')
+}
 
 const setSelectedBug = (bug: Bug): void => {
   const newSnaxopedia = snaxopedia.map((snack: Bug) => ({ ...snack, isSelected: snack.name === bug.name }))
@@ -129,20 +131,24 @@ const generateBug = (bug: Bug) => {
 
     if (!seenOnElement || !seenOffElement || !photographedOnElement || !photographedOffElement) return
 
-    if (hasBeenSeen) {
-      seenOnElement.classList.remove('hidden')
-      seenOffElement.classList.add('hidden')
-    } else {
-      seenOnElement.classList.add('hidden')
-      seenOffElement.classList.remove('hidden')
+    if (typeof hasBeenSeen !== 'undefined') {
+      if (hasBeenSeen) {
+        seenOnElement.classList.remove('hidden')
+        seenOffElement.classList.add('hidden')
+      } else {
+        seenOnElement.classList.add('hidden')
+        seenOffElement.classList.remove('hidden')
+      }
     }
 
-    if (hasBeenPhotographed) {
-      photographedOnElement.classList.remove('hidden')
-      photographedOffElement.classList.add('hidden')
-    } else {
-      photographedOnElement.classList.add('hidden')
-      photographedOffElement.classList.remove('hidden')
+    if (typeof hasBeenPhotographed !== 'undefined') {
+      if (hasBeenPhotographed) {
+        photographedOnElement.classList.remove('hidden')
+        photographedOffElement.classList.add('hidden')
+      } else {
+        photographedOnElement.classList.add('hidden')
+        photographedOffElement.classList.remove('hidden')
+      }
     }
   }
 
@@ -189,10 +195,38 @@ const generateBug = (bug: Bug) => {
 const generateLocationList = (): void => {
   const locationList = document.querySelector('.locations-list')
   if (!locationList) return
-  const bugs = groupedSnaxopedia[0].bugs
-  bugs.forEach((bug: Bug) => {
-    const bugElement = generateBug(bug)
-    locationList.appendChild(bugElement)
+
+  groupedSnaxopedia.forEach((group: SnaxopediaGroup) => {
+    const { location, bugs } = group
+
+    const groupElement = document.createElement('div')
+    groupElement.className = 'group'
+
+    const groupTitleElement = document.createElement('h2')
+    groupTitleElement.className = 'group-title'
+
+    const groupTitleImgElement = document.createElement('img')
+    groupTitleImgElement.className = 'location-image'
+    groupTitleImgElement.src = locationURL(location)
+    groupTitleImgElement.alt = location
+    groupTitleImgElement.title = location
+
+    const groupTitleSpanElement = document.createElement('span')
+    groupTitleSpanElement.innerText = location
+
+    groupTitleElement.appendChild(groupTitleImgElement)
+    groupTitleElement.appendChild(groupTitleSpanElement)
+
+    const bugGroupElement = document.createElement('ul')
+    bugGroupElement.className = 'group-bugs'
+    bugs.forEach((bug: Bug) => {
+      const bugElement = generateBug(bug)
+      bugGroupElement.appendChild(bugElement)
+    })
+
+    groupElement.appendChild(groupTitleElement)
+    groupElement.appendChild(bugGroupElement)
+    locationList.appendChild(groupElement)
   })
 }
 
