@@ -6,6 +6,7 @@
     "dev:vue": "cd .\\snaxopedia-vue\\ && npm run dev",
     "dev:react": "cd .\\snaxopedia-react\\ && npm run dev",
     "dev:js": "cd .\\snaxopedia-js\\ && npm run dev",
+    "dev:solid": "cd .\\snaxopedia-solid\\ && npm run dev",
     "dev:api": "cd .\\snaxopedia-api\\ && denon run --allow-read --allow-net --allow-write index.ts"
   }
 }
