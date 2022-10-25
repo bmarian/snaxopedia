@@ -1,12 +1,13 @@
-import { Component, createEffect } from 'solid-js'
+import { Component, onMount } from 'solid-js'
+import type { StoreContext } from '../types'
 import LeftPage from './components/LeftPage/LeftPage'
 import Loading from './components/Loading/Loading'
 import RightPage from './components/RightPage/RightPage'
-import { loadSnaxopedia, state } from './stores/store'
+import { useStore } from './stores/store'
 
 const App: Component = () => {
-
-  createEffect(() => { loadSnaxopedia() })
+  const [state, { loadSnaxopedia }]: StoreContext = useStore()
+  onMount(() => { loadSnaxopedia() })
 
   return (<>
     <LeftPage />

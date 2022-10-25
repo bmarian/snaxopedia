@@ -3,5 +3,6 @@ import { render } from 'solid-js/web';
 
 import './index.css';
 import App from './App';
+import { StoreProvider } from './stores/store';
 
-render(() => <App />, document.getElementById('app') as HTMLElement);
+render(() => <StoreProvider><App /></StoreProvider>, document.getElementById('app') as HTMLElement);

@@ -1,10 +1,12 @@
 import type { Component } from 'solid-js'
 import type { Bug as BugType } from '../../../types';
-import { modifyBug, setSelectedBug } from '../../stores/store';
+import { useStore } from '../../stores/store';
 import { bugImageURL } from '../../utils/utils';
 import style from './LeftPage.module.css'
 
 const Bug: Component<{ bug: BugType }> = (props) => {
+  const [state, { modifyBug, setSelectedBug }] = useStore()
+
   const bugClasses = `${style.bug}${props.bug.hasBeenPhotographed ? ` ${style.hasPhoto}` : ''}${props.bug.isSelected ? ` ${style.isSelected}` : ''}`
 
   const changeBugStateEvent = (data: { hasBeenSeen?: boolean, hasBeenPhotographed?: boolean, isSelected?: boolean, }) => (evt: any) => {
