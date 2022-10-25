@@ -1,6 +1,7 @@
 import { Component, createEffect } from 'solid-js'
 import { useStore } from '../../stores/store';
 import { bugImageURL } from '../../utils/utils';
+import Attribute from './Attribute';
 import style from './RightPage.module.css'
 
 const RightPage: Component = () => {
@@ -16,7 +17,7 @@ const RightPage: Component = () => {
 
         {getSelectedBug().calories && <div class={style.caloriesContainer}>
           <span class={style.caloriesTitle}>CALORIES</span>
-          <span class={style.caloriesCounter}>{getSelectedBug().calories}</span>
+          <span class={style.caloriesNumber}>{getSelectedBug().calories}</span>
         </div>}
 
         <img class={style.bugImage} src={bugImageURL(getSelectedBug().name)} alt={getSelectedBug().name} title={getSelectedBug().name} />
@@ -24,6 +25,11 @@ const RightPage: Component = () => {
         <span class={style.bugImageBottomLeftTriangle}>◣</span>
         <span class={style.bugImageBottomRightTriangle}>◢</span>
       </div>
+      {getSelectedBug()?.attributes && <Attribute attributes={getSelectedBug().attributes} />}
+      {getSelectedBug()?.strategy && <div class={style.bugStrategy}>
+        <p class={style.title}>STRATEGY</p>
+        <p class={style.strategy}>{getSelectedBug().strategy}</p>
+      </div>}
     </div>}
   </div >);
 };
