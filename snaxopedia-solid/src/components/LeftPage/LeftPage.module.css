@@ -1,0 +1,115 @@
+.leftPage {
+  height: 100%;
+  width: 50vw;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
+  background-color: var(--accent-blue);
+  height: 5rem;
+  width: 100%;
+}
+
+.header .title {
+  color: var(--font-color);
+  font-size: 2.5rem;
+}
+
+.locationList {
+  height: calc(100% - 5rem);
+  width: 100%;
+  overflow-y: auto;
+}
+
+.groupTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: nowrap;
+}
+
+.groupTitle .locationImage {
+  transform: rotate(-15deg);
+  width: 10rem;
+}
+
+.groupTitle span {
+  position: relative;
+  color: var(--location-font-color);
+  text-shadow: 2px 2px var(--text-shadow);
+  font-size: 3rem;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--font-color);
+  -webkit-text-fill-color: var(--location-font-color);
+}
+
+.groupBugs {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  margin: 0;
+  padding: 0;
+}
+
+.groupBugs .bug {
+  background-color: var(--no-photo-bug);
+  margin: 0.3rem;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.groupBugs .bug .bugImage {
+  width: 9rem;
+}
+
+.groupBugs .bug .hasBeenSeen,
+.groupBugs .bug .hasBeenPhotographed {
+  position: absolute;
+  bottom: -0.2rem;
+  background-color: var(--font-color);
+  border-radius: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.groupBugs .bug .hasBeenSeen {
+  left: -0.2rem;
+}
+
+.groupBugs .bug .hasBeenPhotographed {
+  right: -0.2rem;
+}
+
+.groupBugs .bug .hasBeenSeen.off,
+.groupBugs .bug .hasBeenPhotographed.off {
+  color: var(--icon-color);
+}
+
+.groupBugs .bug .hasBeenSeen.on,
+.groupBugs .bug .hasBeenPhotographed.on {
+  color: var(--seen-green);
+}
+
+.groupBugs .bug .hasBeenSeen.off:hover,
+.groupBugs .bug .hasBeenPhotographed.off:hover {
+  color: var(--seen-green);
+}
+
+.groupBugs .bug.hasPhoto {
+  background-color: var(--has-photo-bug);
+}
+
+.groupBugs .bug:hover,
+.groupBugs .bug.isSelected {
+  background-color: var(--accent-blue);
+  border: 0.3rem solid var(--font-color);
+  margin: 0rem;
+  border-radius: 1rem;
+}

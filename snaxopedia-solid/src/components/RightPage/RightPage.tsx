@@ -1,7 +1,7 @@
-import type { Component } from 'solid-js';
+import type { Component } from 'solid-js'
 
 const RightPage: Component = () => {
   return (<></>);
 };
 
-export default RightPage;
+export default RightPage

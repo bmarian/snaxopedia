@@ -1,5 +1,5 @@
-import type { Bug, GroupedSnaxopedia, StoreType } from '../../types';
-import { createStore } from 'solid-js/store';
+import type { Bug, GroupedSnaxopedia, StoreType } from '../../types'
+import { createStore } from 'solid-js/store'
 
 const [state, setState] = createStore({
   snaxopedia: [],
